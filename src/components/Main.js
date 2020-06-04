@@ -9,19 +9,7 @@ import Footer from './Footer';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state) => {
-  return {
-    dishes: state.dishes,
-    comments: state.comments,
-    promotions: state.promotions,
-    leaders: state.leaders,
-  };
-};
-
 class Main extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const HomePage = () => {
       return (
@@ -73,5 +61,12 @@ class Main extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  dishes: state.dishes,
+  comments: state.comments,
+  promotions: state.promotions,
+  leaders: state.leaders,
+});
 
 export default withRouter(connect(mapStateToProps)(Main));
