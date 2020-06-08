@@ -24,6 +24,7 @@ export const Dishes = (state = initialState, action) => {
         ...state,
         isLoading: false,
         errMess: action.payload,
+        dishes: [],
       };
     default:
       return state;
