@@ -7,6 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
 } from 'reactstrap';
+// We need "Link" here for dynamic routing
 import { Link } from 'react-router-dom';
 import Loading from './Loading';
 import { baseUrl } from '../shared/baseUrl';
@@ -14,7 +15,9 @@ import { baseUrl } from '../shared/baseUrl';
 function RenderMenuItem({ dish }) {
   return (
     <Card>
+      {/* again dynamic routing */}
       <Link to={`/menu/${dish.id}`}>
+        {/* Since we are getting data(also image here) from the server, I added baseUrl to source */}
         <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
         <CardImgOverlay>
           <CardTitle>{dish.name}</CardTitle>
@@ -32,7 +35,7 @@ const Menu = (props) => {
       </div>
     );
   });
-
+  // Since we are getting data from the server, I am handling with loading and error.
   if (props.dishes.isLoading) {
     return (
       <div className="container">

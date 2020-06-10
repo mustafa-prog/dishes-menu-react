@@ -1,11 +1,17 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+// For react-redux-form
 import { createForms } from 'react-redux-form';
+
+// we are importing all reducers
 import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Promotions } from './promotions';
 import { Leaders } from './leaders';
+
+// For fetching and posting we need thunk
 import thunk from 'redux-thunk';
-import logger from 'redux-logger';
+
+// again for react-redux-form
 import { initialFeedback } from './forms';
 
 const rootReducer = combineReducers({
@@ -22,7 +28,7 @@ export const ConfigureStore = () => {
   const store = createStore(
     rootReducer,
     compose(
-      applyMiddleware(thunk, logger),
+      applyMiddleware(thunk),
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
         window.__REDUX_DEVTOOLS_EXTENSION__()
     )

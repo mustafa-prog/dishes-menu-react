@@ -13,32 +13,42 @@ import {
   fetchDishes,
   fetchComments,
   fetchPromos,
+  fetchLeaders,
+  postFeedback,
 } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 class Main extends Component {
   componentDidMount() {
+    // We are getting data from server after the component mounted
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
     const HomePage = () => {
       return (
         <Home
-          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          //props related to dishes
           dishesLoading={this.props.dishes.isLoading}
           dishesErrMess={this.props.dishes.errMess}
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          //props related to promotions
+          promosLoading={this.props.promotions.isLoading}
+          promosErrMess={this.props.promotions.errMess}
           promotion={
             this.props.promotions.promotions.filter(
               (promotion) => promotion.featured
             )[0]
           }
-          promosLoading={this.props.promotions.isLoading}
-          promosErrMess={this.props.promotions.errMess}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          //props related to leaders
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErrMess={this.props.leaders.errMess}
+          leader={
+            this.props.leaders.leaders.filter((leader) => leader.featured)[0]
+          }
         />
       );
     };
@@ -65,41 +75,39 @@ class Main extends Component {
     return (
       <div>
         <Header />
-        <TransitionGroup>
-          <CSSTransition
-            key={this.props.location.key}
-            classNames="page"
-            timeout={300}
-          >
-            <Switch>
-              <Route path="/home" component={HomePage} />
-              <Route
-                path="/aboutus"
-                component={() => <About leaders={this.props.leaders} />}
+        <Switch>
+          <Route path="/home" component={HomePage} />
+          <Route
+            path="/aboutus"
+            component={() => <About leaders={this.props.leaders} />}
+          />
+          <Route
+            exact
+            path="/menu"
+            component={() => <Menu dishes={this.props.dishes} />}
+          />
+          {/* Dynamic routing */}
+          <Route path="/menu/:dishId" component={DishWithId} />
+          <Route
+            exact
+            path="/contactus"
+            component={() => (
+              <Contact
+                resetFeedbackForm={this.props.resetFeedbackForm}
+                postFeedback={this.props.postFeedback}
               />
-              <Route
-                exact
-                path="/menu"
-                component={() => <Menu dishes={this.props.dishes} />}
-              />
-              <Route path="/menu/:dishId" component={DishWithId} />
-              <Route
-                exact
-                path="/contactus"
-                component={() => (
-                  <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
-                )}
-              />
-              <Redirect to="/home" />
-            </Switch>
-          </CSSTransition>
-        </TransitionGroup>
+            )}
+          />
+          {/* Instead of using "path" without value, we used "Redirect". */}
+          <Redirect to="/home" />
+        </Switch>
         <Footer />
       </div>
     );
   }
 }
 
+// We are getting all state to this main component, then sending them down to child components via props.
 const mapStateToProps = (state) => ({
   dishes: state.dishes,
   comments: state.comments,
@@ -107,13 +115,17 @@ const mapStateToProps = (state) => ({
   leaders: state.leaders,
 });
 
+// We are also defining all methods here in this component and then sending them down to the related child component.
 const mapDispatchToProps = (dispatch) => ({
-  postComment: (dishId, rating, author, comment) =>
-    dispatch(postComment(dishId, rating, author, comment)),
   fetchDishes: () => dispatch(fetchDishes()),
-  resetFeedbackForm: () => dispatch(actions.reset('feedback')),
   fetchComments: () => dispatch(fetchComments()),
   fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+  resetFeedbackForm: () => dispatch(actions.reset('feedback')),
+  postComment: (dishId, rating, author, comment) =>
+    dispatch(postComment(dishId, rating, author, comment)),
+  postFeedback: (feedback) => dispatch(postFeedback(feedback)),
 });
 
+//If we use Router, then we need to import and use 'withRouter'(from react-router-dom) in addition to "connect"
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

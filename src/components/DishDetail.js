@@ -8,9 +8,9 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Modal,
-  Button,
   ModalBody,
   ModalHeader,
+  Button,
   Label,
   Row,
 } from 'reactstrap';
@@ -18,12 +18,13 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import Loading from './Loading';
 import { baseUrl } from '../shared/baseUrl';
-import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
+// Some validation functions for form fields
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 
+// In this component I used local component state instead of Redux store. Redux store does not need this state.
 class CommentForm extends Component {
   constructor(props) {
     super(props);
@@ -31,8 +32,9 @@ class CommentForm extends Component {
   }
 
   handleSubmit = (values) => {
-    //console.log(values);
+    console.log(values);
     this.toggleModal();
+    // We are firstly saving in the server, then in store, the we are displaying.
     this.props.postComment(
       this.props.dishId,
       values.rating,
@@ -41,6 +43,7 @@ class CommentForm extends Component {
     );
   };
 
+  // function just to open and close the model
   toggleModal = () => {
     this.setState({ isModalOpen: !this.state.isModalOpen });
   };
@@ -104,7 +107,7 @@ class CommentForm extends Component {
                   type="textarea"
                   id="comment"
                   name="comment"
-                  rows="12"
+                  rows="8"
                   className="form-control"
                 />
               </Row>
@@ -119,56 +122,17 @@ class CommentForm extends Component {
   }
 }
 
-function RenderComments({ comments, postComment, dishId }) {
-  if (comments == null) {
-    return <div></div>;
-  }
-  const cmnts = comments.map((comment) => {
-    return (
-      <Fade in>
-        <li key={comment.id}>
-          <p>{comment.comment}</p>
-          <p>
-            -- {comment.author}, &nbsp;
-            {new Intl.DateTimeFormat('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: '2-digit',
-            }).format(new Date(comment.date))}
-          </p>
-        </li>
-      </Fade>
-    );
-  });
-  return (
-    <div className="col-12 col-md-5 m-1">
-      <h4> Comments </h4>
-      <ul className="list-unstyled">
-        <Stagger in>{cmnts}</Stagger>
-      </ul>
-      <CommentForm dishId={dishId} postComment={postComment} />
-    </div>
-  );
-}
-
 function RenderDish({ dish }) {
   if (dish != null) {
     return (
       <div className="col-12 col-md-5 m-1">
-        <FadeTransform
-          in
-          transformProps={{
-            exitTransform: 'scale(0.5) translateY(-50%)',
-          }}
-        >
-          <Card>
-            <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
-            <CardBody>
-              <CardTitle>{dish.name}</CardTitle>
-              <CardText>{dish.description}</CardText>
-            </CardBody>
-          </Card>
-        </FadeTransform>
+        <Card>
+          <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle>{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
       </div>
     );
   } else {
@@ -176,6 +140,34 @@ function RenderDish({ dish }) {
   }
 }
 
+function RenderComments({ comments, postComment, dishId }) {
+  if (comments == null) {
+    return <div></div>;
+  }
+  const cmnts = comments.map((comment) => {
+    return (
+      <li key={comment.id}>
+        <p>{comment.comment}</p>
+        <p>
+          -- {comment.author}, &nbsp;
+          {new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit',
+          }).format(new Date(comment.date))}
+        </p>
+      </li>
+    );
+  });
+  return (
+    <div className="col-12 col-md-5 m-1">
+      <h4> Comments </h4>
+      <ul className="list-unstyled">{cmnts}</ul>
+      <CommentForm dishId={dishId} postComment={postComment} />
+    </div>
+  );
+}
+// Since we are getting data from the server, I am handling with loading and error.
 const DishDetail = (props) => {
   if (props.isLoading) {
     return (
@@ -212,6 +204,7 @@ const DishDetail = (props) => {
           <RenderDish dish={props.dish} />
           <RenderComments
             comments={props.comments}
+            // We passing down also post comment method.
             postComment={props.postComment}
             dishId={props.dish.id}
           />

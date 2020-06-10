@@ -1,4 +1,6 @@
 import React from 'react';
+
+// I used reactstrap for creating card
 import {
   Card,
   CardImg,
@@ -9,32 +11,26 @@ import {
 } from 'reactstrap';
 import Loading from './Loading';
 import { baseUrl } from '../shared/baseUrl';
-import { FadeTransform } from 'react-animation-components';
 
 const RenderCard = ({ item, isLoading, errMess }) => {
+  // Since we are getting data from the server, I am handling with loading and error.
   if (isLoading) {
     return <Loading />;
   } else if (errMess) {
     return <h4>{errMess}</h4>;
   } else
     return (
-      <FadeTransform
-        in
-        transformProps={{
-          exitTransform: 'scale(0.5) translateY(-50%)',
-        }}
-      >
-        <Card>
-          <CardImg src={baseUrl + item.image} alt={item.name} />
-          <CardBody>
-            <CardTitle>{item.name}</CardTitle>
-            {item.designation ? (
-              <CardSubtitle>{item.designation}</CardSubtitle>
-            ) : null}
-            <CardText>{item.description}</CardText>
-          </CardBody>
-        </Card>
-      </FadeTransform>
+      <Card>
+        {/* Since we are getting data(also image here) from the server, I added baseUrl to source */}
+        <CardImg src={baseUrl + item.image} alt={item.name} />
+        <CardBody>
+          <CardTitle>{item.name}</CardTitle>
+          {item.designation ? (
+            <CardSubtitle>{item.designation}</CardSubtitle>
+          ) : null}
+          <CardText>{item.description}</CardText>
+        </CardBody>
+      </Card>
     );
 };
 
@@ -57,7 +53,11 @@ const Home = (props) => {
           />
         </div>
         <div className="col-12 col-md m-1">
-          <RenderCard item={props.leader} />
+          <RenderCard
+            item={props.leader}
+            isLoading={props.leadersLoading}
+            errMess={props.leadersErrMess}
+          />
         </div>
       </div>
     </div>

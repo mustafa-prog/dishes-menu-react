@@ -8,8 +8,10 @@ import {
   Row,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Control, Form, Errors, actions } from 'react-redux-form';
+// Instead of using "LocalForm", this time "Form" was used to persist the data in the input field even if we leave the page
+import { Control, Form, Errors } from 'react-redux-form';
 
+//Functions for form validation
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
@@ -19,7 +21,9 @@ const validEmail = (val) =>
 
 class Contact extends Component {
   handleSubmit = (values) => {
-    alert(JSON.stringify(values));
+    //We are saving Feedback in the server and then displaying in the alert box.
+    this.props.postFeedback(values);
+    // We empty the input fields.
     this.props.resetFeedbackForm();
   };
   render() {
@@ -50,11 +54,11 @@ class Contact extends Component {
               <br />
               HONG KONG
               <br />
-              <i className="fa fa-phone"></i>: +852 1234 5678
+              <i className="fa fa-phone"></i> : +852 1234 5678
               <br />
-              <i className="fa fa-fax"></i>: +852 8765 4321
+              <i className="fa fa-fax"></i> : +852 8765 4321
               <br />
-              <i className="fa fa-envelope"></i>:{' '}
+              <i className="fa fa-envelope"></i> :{' '}
               <a href="mailto:confusion@food.net">confusion@food.net</a>
             </address>
           </div>
@@ -70,7 +74,7 @@ class Contact extends Component {
               >
                 <i className="fa fa-phone"></i> Call
               </a>
-              <a role="button" className="btn btn-info">
+              <a role="button" className="btn btn-info" href="tel:+85212345678">
                 <i className="fa fa-skype"></i> Skype
               </a>
               <a

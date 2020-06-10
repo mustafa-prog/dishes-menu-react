@@ -5,6 +5,7 @@ const initialState = {
   comments: [],
 };
 
+// Comments reducer
 export const Comments = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.ADD_COMMENTS:

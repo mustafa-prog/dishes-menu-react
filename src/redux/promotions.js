@@ -6,6 +6,7 @@ const initialState = {
   promotions: [],
 };
 
+//Promotions reducer
 export const Promotions = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.ADD_PROMOS:

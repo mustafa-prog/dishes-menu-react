@@ -6,6 +6,7 @@ const initialState = {
   dishes: [],
 };
 
+//Dishes reducer
 export const Dishes = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.ADD_DISHES:

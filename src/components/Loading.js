@@ -1,5 +1,5 @@
 import React from 'react';
-
+// This component displays only a spinner with the message "Loading".
 const Loading = () => {
   return (
     <div className="col-12">

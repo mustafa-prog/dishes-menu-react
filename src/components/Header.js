@@ -21,6 +21,7 @@ import { NavLink } from 'react-router-dom';
 class Header extends Component {
   constructor(props) {
     super(props);
+    //Again I used local component state instead of Redux store to handle modal and burger menu.
     this.state = {
       isNavOpen: false,
       isModalOpen: false,
@@ -46,17 +47,21 @@ class Header extends Component {
   render() {
     return (
       <React.Fragment>
+        {/* expand attribute is needed */}
         <Navbar dark expand="md">
           <div className="container">
+            {/* NavbarToggler is burger menu symbol */}
             <NavbarToggler onClick={this.toggleNav} />
             <NavbarBrand className="mr-auto" href="/">
               <img
+                // I get logo image from project folder itself not from the server.
                 src="assets/images/logo.png"
                 height="30"
                 width="41"
                 alt="Ristorante Con Fusion"
               />
             </NavbarBrand>
+            {/* isOpen and navbar attributes are needed */}
             <Collapse isOpen={this.state.isNavOpen} navbar>
               <Nav navbar>
                 <NavItem>
@@ -110,6 +115,7 @@ class Header extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
           <ModalBody>
+            {/* Uncontrolled form */}
             <Form onSubmit={this.handleLogin}>
               <FormGroup>
                 <Label htmlFor="username">Username</Label>
